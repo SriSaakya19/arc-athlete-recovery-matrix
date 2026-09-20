@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# HIGH-CONTRAST DARK CSS INJECTION
+# ULTRA-HIGH CONTRAST DARK CSS INJECTION
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,500;1,300&display=swap');
@@ -42,7 +42,7 @@ st.markdown("""
         font-size: 1.1rem !important;
     }
 
-    /* FIX SIDEBAR TEXT VISIBILITY */
+    /* SIDEBAR TEXT VISIBILITY */
     section[data-testid="stSidebar"] {
         background-color: #0B132B !important;
         border-right: 1px solid rgba(255, 255, 255, 0.15);
@@ -55,25 +55,36 @@ st.markdown("""
         font-weight: 600 !important;
     }
 
-    /* METRIC CARDS & LABELS FIX */
-    div[data-testid="stMetric"] {
-        background: #0F172A !important;
-        border: 1px solid #00F2FE !important;
-        border-radius: 14px !important;
-        padding: 15px !important;
-        box-shadow: 0px 4px 20px rgba(0, 242, 254, 0.15) !important;
+    /* CUSTOM HIGH-VISIBILITY METRIC CARDS */
+    .metric-card {
+        background: #0F172A;
+        border: 1px solid #00F2FE;
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0px 4px 20px rgba(0, 242, 254, 0.2);
+        text-align: center;
+        margin-bottom: 15px;
     }
 
-    div[data-testid="stMetricLabel"] p {
-        color: #94A3B8 !important;
+    .metric-label {
+        color: #FFFFFF !important;
         font-size: 14px !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
     }
 
-    div[data-testid="stMetricValue"] div {
+    .metric-value {
         color: #00F2FE !important;
         font-size: 26px !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
+    }
+
+    .metric-sub {
+        color: #94A3B8 !important;
+        font-size: 12px !important;
+        margin-top: 4px;
     }
 
     /* Section Headings */
@@ -97,13 +108,24 @@ st.write("*Engineered by **Sri Saakya** | Lead Architect, The Cricket Alchemist*
 
 st.markdown("---")
 
-# --- COMPLETE INDIAN ATHLETE DATABASE ---
+# --- COMPLETE INDIAN ATHLETE SQUAD DATABASE ---
 athlete_db = {
+    "Virat Kohli": {"jersey": 18, "role": "Top-Order Batter", "default_recent": 12.0, "default_chronic": 15.0, "default_flexion": 165.0},
+    "Rohit Sharma": {"jersey": 45, "role": "Top-Order Batter", "default_recent": 10.0, "default_chronic": 14.0, "default_flexion": 160.0},
+    "Shubman Gill": {"jersey": 77, "role": "Top-Order Batter", "default_recent": 14.0, "default_chronic": 16.0, "default_flexion": 162.0},
+    "KL Rahul": {"jersey": 1, "role": "Wicketkeeper Batter", "default_recent": 15.0, "default_chronic": 16.0, "default_flexion": 158.0},
+    "Shreyas Iyer": {"jersey": 41, "role": "Middle-Order Batter", "default_recent": 13.0, "default_chronic": 15.0, "default_flexion": 160.0},
+    "Rishabh Pant": {"jersey": 17, "role": "Wicketkeeper Batter", "default_recent": 16.0, "default_chronic": 17.0, "default_flexion": 155.0},
+    "Abhishek Sharma": {"jersey": 4, "role": "Batting All-Rounder", "default_recent": 18.0, "default_chronic": 16.0, "default_flexion": 154.0},
+    "Ishan Kishan": {"jersey": 32, "role": "Wicketkeeper Batter", "default_recent": 14.0, "default_chronic": 15.0, "default_flexion": 158.0},
+    "Devdutt Padikkal": {"jersey": 37, "role": "Top-Order Batter", "default_recent": 11.0, "default_chronic": 14.0, "default_flexion": 162.0},
     "Nitish Kumar Reddy": {"jersey": 88, "role": "Fast Bowling All-Rounder", "default_recent": 18.0, "default_chronic": 18.0, "default_flexion": 155.0},
     "Jasprit Bumrah": {"jersey": 93, "role": "Premier Fast Bowler", "default_recent": 28.0, "default_chronic": 18.0, "default_flexion": 138.0},
     "Mohammed Siraj": {"jersey": 73, "role": "Fast Bowler", "default_recent": 24.0, "default_chronic": 20.0, "default_flexion": 145.0},
     "Mohammed Shami": {"jersey": 11, "role": "Fast Bowler", "default_recent": 16.0, "default_chronic": 21.0, "default_flexion": 160.0},
     "Hardik Pandya": {"jersey": 33, "role": "Fast Bowling All-Rounder", "default_recent": 12.0, "default_chronic": 15.0, "default_flexion": 165.0},
+    "Ravindra Jadeja": {"jersey": 8, "role": "Spin All-Rounder", "default_recent": 16.0, "default_chronic": 18.0, "default_flexion": 158.0},
+    "Axar Patel": {"jersey": 20, "role": "Spin All-Rounder", "default_recent": 17.0, "default_chronic": 17.0, "default_flexion": 156.0},
     "Arshdeep Singh": {"jersey": 2, "role": "Left-Arm Fast Bowler", "default_recent": 20.0, "default_chronic": 19.0, "default_flexion": 150.0},
     "Prasidh Krishna": {"jersey": 24, "role": "Fast Bowler", "default_recent": 25.0, "default_chronic": 17.0, "default_flexion": 139.0},
     "Akash Deep": {"jersey": 41, "role": "Fast Bowler", "default_recent": 22.0, "default_chronic": 20.0, "default_flexion": 148.0},
@@ -145,16 +167,44 @@ else:
     optimal_temp = 13.0
     duration_mins = 7.0
 
-# --- METRICS DISPLAY ---
+# --- HIGH VISIBILITY METRICS DISPLAY ---
 col1, col2, col3, col4 = st.columns(4)
+
 with col1:
-    st.metric("Target Athlete", f"{athlete_name}", f"#{jersey_number}")
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-label">Target Athlete</div>
+        <div class="metric-value">{athlete_name}</div>
+        <div class="metric-sub">Jersey #{jersey_number}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col2:
-    st.metric("ACWR Ratio", f"{acwr_score:.2f}")
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-label">ACWR Ratio</div>
+        <div class="metric-value">{acwr_score:.2f}</div>
+        <div class="metric-sub">Acute / Chronic Ratio</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col3:
-    st.metric("Cryo Target Temp", f"{optimal_temp}°C")
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-label">Cryo Target Temp</div>
+        <div class="metric-value">{optimal_temp}°C</div>
+        <div class="metric-sub">Optimal Bath Temp</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col4:
-    st.metric("Immersion Duration", f"{duration_mins} Mins")
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-label">Immersion Duration</div>
+        <div class="metric-value">{duration_mins} Mins</div>
+        <div class="metric-sub">Recommended Duration</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown(f"<br><div style='font-family:\"Lucida Calligraphy\", cursive; font-style:italic; font-size:1.35rem; color:#FFFFFF;'>Recovery Status: <span style='color:#00F2FE;'>{status}</span></div>", unsafe_allow_html=True)
 
