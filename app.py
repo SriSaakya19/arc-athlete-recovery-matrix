@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# FIXED AESTHETIC DARK CSS INJECTION
+# HIGH-CONTRAST DARK CSS INJECTION
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,500;1,300&display=swap');
@@ -22,7 +22,7 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    /* Fix Header Title Cut-off */
+    /* Header Styles */
     .aesthetic-title {
         font-family: 'Lucida Calligraphy', 'Playfair Display', cursive, serif !important;
         font-style: italic !important;
@@ -32,7 +32,7 @@ st.markdown("""
         font-size: 2.8rem !important;
         font-weight: 700;
         line-height: 1.3 !important;
-        padding-bottom: 10px;
+        padding-bottom: 5px;
     }
 
     .aesthetic-subtitle {
@@ -42,30 +42,37 @@ st.markdown("""
         font-size: 1.1rem !important;
     }
 
-    /* FIX SIDEBAR TEXT VISIBILITY (WHITE TEXT) */
+    /* FIX SIDEBAR TEXT VISIBILITY */
     section[data-testid="stSidebar"] {
         background-color: #0B132B !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] span {
         color: #FFFFFF !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
     }
 
-    /* Glassmorphism Metric Cards */
+    /* METRIC CARDS & LABELS FIX */
     div[data-testid="stMetric"] {
-        background: rgba(15, 23, 42, 0.85) !important;
-        border: 1px solid rgba(0, 242, 254, 0.3) !important;
+        background: #0F172A !important;
+        border: 1px solid #00F2FE !important;
         border-radius: 14px !important;
         padding: 15px !important;
+        box-shadow: 0px 4px 20px rgba(0, 242, 254, 0.15) !important;
     }
 
-    div[data-testid="stMetricValue"] {
+    div[data-testid="stMetricLabel"] p {
+        color: #94A3B8 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    div[data-testid="stMetricValue"] div {
         color: #00F2FE !important;
-        font-size: 28px !important;
+        font-size: 26px !important;
         font-weight: 700 !important;
     }
 
@@ -92,18 +99,18 @@ st.markdown("---")
 
 # --- COMPLETE INDIAN ATHLETE DATABASE ---
 athlete_db = {
-    "Nitish Kumar Reddy": {"jersey": 88, "role": "Fast Bowling All-Rounder", "default_recent": 24.0, "default_chronic": 18.0, "default_flexion": 142.5},
-    "Jasprit Bumrah": {"jersey": 93, "role": "Premier Fast Bowler", "default_recent": 28.0, "default_chronic": 20.0, "default_flexion": 138.0},
-    "Mohammed Siraj": {"jersey": 73, "role": "Fast Bowler", "default_recent": 30.0, "default_chronic": 22.0, "default_flexion": 140.0},
-    "Mohammed Shami": {"jersey": 11, "role": "Fast Bowler", "default_recent": 26.0, "default_chronic": 21.0, "default_flexion": 141.0},
-    "Hardik Pandya": {"jersey": 33, "role": "Fast Bowling All-Rounder", "default_recent": 18.0, "default_chronic": 15.0, "default_flexion": 145.0},
-    "Arshdeep Singh": {"jersey": 2, "role": "Left-Arm Fast Bowler", "default_recent": 22.0, "default_chronic": 19.0, "default_flexion": 143.0},
+    "Nitish Kumar Reddy": {"jersey": 88, "role": "Fast Bowling All-Rounder", "default_recent": 18.0, "default_chronic": 18.0, "default_flexion": 155.0},
+    "Jasprit Bumrah": {"jersey": 93, "role": "Premier Fast Bowler", "default_recent": 28.0, "default_chronic": 18.0, "default_flexion": 138.0},
+    "Mohammed Siraj": {"jersey": 73, "role": "Fast Bowler", "default_recent": 24.0, "default_chronic": 20.0, "default_flexion": 145.0},
+    "Mohammed Shami": {"jersey": 11, "role": "Fast Bowler", "default_recent": 16.0, "default_chronic": 21.0, "default_flexion": 160.0},
+    "Hardik Pandya": {"jersey": 33, "role": "Fast Bowling All-Rounder", "default_recent": 12.0, "default_chronic": 15.0, "default_flexion": 165.0},
+    "Arshdeep Singh": {"jersey": 2, "role": "Left-Arm Fast Bowler", "default_recent": 20.0, "default_chronic": 19.0, "default_flexion": 150.0},
     "Prasidh Krishna": {"jersey": 24, "role": "Fast Bowler", "default_recent": 25.0, "default_chronic": 17.0, "default_flexion": 139.0},
-    "Akash Deep": {"jersey": 41, "role": "Fast Bowler", "default_recent": 27.0, "default_chronic": 20.0, "default_flexion": 142.0},
-    "Harshit Rana": {"jersey": 22, "role": "Fast Bowler", "default_recent": 21.0, "default_chronic": 16.0, "default_flexion": 144.0},
-    "Mayank Yadav": {"jersey": 7, "role": "Express Fast Bowler", "default_recent": 16.0, "default_chronic": 12.0, "default_flexion": 136.0},
-    "Smaran Ravichandran": {"jersey": 19, "role": "Emerging Pace All-Rounder", "default_recent": 20.0, "default_chronic": 16.0, "default_flexion": 145.0},
-    "Aman Rao": {"jersey": 12, "role": "Emerging Pace All-Rounder", "default_recent": 19.0, "default_chronic": 15.0, "default_flexion": 146.0}
+    "Akash Deep": {"jersey": 41, "role": "Fast Bowler", "default_recent": 22.0, "default_chronic": 20.0, "default_flexion": 148.0},
+    "Harshit Rana": {"jersey": 22, "role": "Fast Bowler", "default_recent": 18.0, "default_chronic": 16.0, "default_flexion": 152.0},
+    "Mayank Yadav": {"jersey": 7, "role": "Express Fast Bowler", "default_recent": 24.0, "default_chronic": 12.0, "default_flexion": 136.0},
+    "Smaran Ravichandran": {"jersey": 19, "role": "Emerging Pace All-Rounder", "default_recent": 14.0, "default_chronic": 16.0, "default_flexion": 158.0},
+    "Aman Rao": {"jersey": 12, "role": "Emerging Pace All-Rounder", "default_recent": 10.0, "default_chronic": 15.0, "default_flexion": 168.0}
 }
 
 # --- SIDEBAR INTERFACE ---
@@ -122,13 +129,14 @@ knee_flexion = st.sidebar.slider("Stride Knee Flexion Angle (°)", 120.0, 180.0,
 
 # --- CORE ENGINE LOGIC ---
 acwr_score = recent_overs / chronic_overs if chronic_overs > 0 else 1.0
-fatigue_index = (acwr_score * 50) + ((180 - knee_flexion) * 1.5)
+fatigue_index = (acwr_score * 40) + ((180 - knee_flexion) * 1.1)
 
-if fatigue_index > 75:
+# Dynamic REALISTIC STATUS THRESHOLDS
+if fatigue_index > 90:
     status = "🔴 CRITICAL STRAIN ZONE"
     optimal_temp = 8.0
     duration_mins = 12.0
-elif 45 <= fatigue_index <= 75:
+elif 65 <= fatigue_index <= 90:
     status = "🟡 OPTIMAL LOAD RECOVERY"
     optimal_temp = 11.0
     duration_mins = 9.5
@@ -148,14 +156,14 @@ with col3:
 with col4:
     st.metric("Immersion Duration", f"{duration_mins} Mins")
 
-st.markdown(f"<br><div style='font-family:\"Lucida Calligraphy\", cursive; font-style:italic; font-size:1.3rem; color:#FFFFFF;'>Recovery Status: <span style='color:#00F2FE;'>{status}</span></div>", unsafe_allow_html=True)
+st.markdown(f"<br><div style='font-family:\"Lucida Calligraphy\", cursive; font-style:italic; font-size:1.35rem; color:#FFFFFF;'>Recovery Status: <span style='color:#00F2FE;'>{status}</span></div>", unsafe_allow_html=True)
 
-# --- STACKED GRAPHICAL LAYOUT (ONE BELOW THE OTHER) ---
+# --- STACKED GRAPHICAL LAYOUT ---
 st.markdown('<div class="section-header">Biomechanical Fatigue & Workload Analytics ✨</div>', unsafe_allow_html=True)
 
-# 1. RADAR FOOTPRINT GRAPH (FULL WIDTH)
+# 1. RADAR FOOTPRINT GRAPH
 categories = ['ACWR Fatigue', 'Knee Strain', 'Lactic Stress', 'Neural Depletion']
-values = [acwr_score * 40, (180 - knee_flexion) * 2, fatigue_index * 0.8, (recent_overs / 50) * 100]
+values = [acwr_score * 35, (180 - knee_flexion) * 1.5, fatigue_index * 0.7, (recent_overs / 50) * 100]
 
 fig_radar = go.Figure()
 fig_radar.add_trace(go.Scatterpolar(
@@ -184,7 +192,7 @@ st.plotly_chart(fig_radar, use_container_width=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 2. WORKLOAD TREND LINE GRAPH (FULL WIDTH BELOW)
+# 2. WORKLOAD TREND LINE GRAPH
 days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Match Day', 'Post Match']
 workload_trend = [recent_overs*0.2, recent_overs*0.4, recent_overs*0.1, recent_overs*0.6, recent_overs*0.3, recent_overs, 0]
 recovery_curve = [100 - (w * 1.8) for w in workload_trend]
