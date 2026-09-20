@@ -19,7 +19,7 @@ st.markdown("""
     .stButton>button:hover { background-color: #64FFDA; color: #0A192F; }
     div[data-testid="stMetricValue"] { color: #00B4D8 !important; font-size: 28px !important; }
     </style>
-    """, unsafe_style_html=True)
+    """, unsafe_allow_html=True)
 
 st.title("ARC — ATHLETE RECOVERY MATRIX v1.0 ❄️🧠")
 st.subheader("Predictive Thermal-Kinetic Recovery Suite for Elite All-Rounders")
