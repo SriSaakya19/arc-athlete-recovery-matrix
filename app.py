@@ -22,31 +22,48 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("ARC — ATHLETE RECOVERY MATRIX v1.0 ❄️🧠")
-st.subheader("Predictive Thermal-Kinetic Recovery Suite for Elite All-Rounders")
+st.subheader("Predictive Thermal-Kinetic Recovery Suite for Elite Indian Athletes")
 st.write("Engineered by **Sri Saakya** | Founder & Lead Architect, *The Cricket Alchemist*")
 
 st.markdown("---")
 
-# --- SIDEBAR INTERFACE: ATHLETIC PROFILING ---
-st.sidebar.header("🏆 ATHLETE LIVE PERFORMANCE INPUTS")
-athlete_name = st.sidebar.selectbox("Select Target Athlete", ["Nitish Kumar Reddy", "Smaran Ravichandran", "Aman Rao"])
-jersey_number = 88 if athlete_name == "Nitish Kumar Reddy" else 19
+# --- COMPLETE INDIAN ATHLETE DATABASE ---
+athlete_db = {
+    "Nitish Kumar Reddy": {"jersey": 88, "role": "Fast Bowling All-Rounder", "default_recent": 24.0, "default_chronic": 18.0, "default_flexion": 142.5},
+    "Jasprit Bumrah": {"jersey": 93, "role": "Premier Fast Bowler", "default_recent": 28.0, "default_chronic": 20.0, "default_flexion": 138.0},
+    "Mohammed Siraj": {"jersey": 73, "role": "Fast Bowler", "default_recent": 30.0, "default_chronic": 22.0, "default_flexion": 140.0},
+    "Mohammed Shami": {"jersey": 11, "role": "Fast Bowler", "default_recent": 26.0, "default_chronic": 21.0, "default_flexion": 141.0},
+    "Hardik Pandya": {"jersey": 33, "role": "Fast Bowling All-Rounder", "default_recent": 18.0, "default_chronic": 15.0, "default_flexion": 145.0},
+    "Arshdeep Singh": {"jersey": 2, "role": "Left-Arm Fast Bowler", "default_recent": 22.0, "default_chronic": 19.0, "default_flexion": 143.0},
+    "Prasidh Krishna": {"jersey": 24, "role": "Fast Bowler", "default_recent": 25.0, "default_chronic": 17.0, "default_flexion": 139.0},
+    "Akash Deep": {"jersey": 41, "role": "Fast Bowler", "default_recent": 27.0, "default_chronic": 20.0, "default_flexion": 142.0},
+    "Harshit Rana": {"jersey": 22, "role": "Fast Bowler", "default_recent": 21.0, "default_chronic": 16.0, "default_flexion": 144.0},
+    "Mayank Yadav": {"jersey": 7, "role": "Express Fast Bowler", "default_recent": 16.0, "default_chronic": 12.0, "default_flexion": 136.0},
+    "Smaran Ravichandran": {"jersey": 19, "role": "Emerging Pace All-Rounder", "default_recent": 20.0, "default_chronic": 16.0, "default_flexion": 145.0},
+    "Aman Rao": {"jersey": 12, "role": "Emerging Pace All-Rounder", "default_recent": 19.0, "default_chronic": 15.0, "default_flexion": 146.0}
+}
 
-recent_overs = st.sidebar.slider("Recent Workload (Overs Bowled in Last 7 Days)", 0.0, 50.0, 24.0, step=0.5)
-chronic_overs = st.sidebar.slider("Chronic Workload (Avg Weekly Overs Last 4 Weeks)", 5.0, 40.0, 18.0, step=0.5)
-knee_flexion = st.sidebar.slider("Biomechanical Knee Flexion Angle (Stride Impact °)", 120.0, 180.0, 142.5, step=0.5)
+# --- SIDEBAR INTERFACE: ATHLETIC PROFILING ---
+st.sidebar.header("🏆 SELECT INDIAN ATHLETE")
+athlete_name = st.sidebar.selectbox("Choose Athlete", list(athlete_db.keys()))
+
+selected_athlete = athlete_db[athlete_name]
+jersey_number = selected_athlete["jersey"]
+role = selected_athlete["role"]
+
+st.sidebar.markdown(f"**Role:** `{role}`")
+
+recent_overs = st.sidebar.slider("Recent Workload (Overs Bowled in Last 7 Days)", 0.0, 50.0, float(selected_athlete["default_recent"]), step=0.5)
+chronic_overs = st.sidebar.slider("Chronic Workload (Avg Weekly Overs Last 4 Weeks)", 5.0, 40.0, float(selected_athlete["default_chronic"]), step=0.5)
+knee_flexion = st.sidebar.slider("Biomechanical Knee Flexion Angle (Stride Impact °)", 120.0, 180.0, float(selected_athlete["default_flexion"]), step=0.5)
 
 # --- CORE MATHEMATICAL ENGINE ---
-# Calculate rolling ACWR (Acute-to-Chronic Workload Ratio)
 acwr_score = recent_overs / chronic_overs if chronic_overs > 0 else 1.0
-
-# Calculate Downstream Micro-Strain Fatigue Index
 fatigue_index = (acwr_score * 50) + ((180 - knee_flexion) * 1.5)
 
-# Calculate Automated Cryotherapy Recovery Parameters
 if fatigue_index > 75:
     status = "🔴 CRITICAL STRAIN ZONE"
-    optimal_temp = 8.0  # Deep cryo flush needed
+    optimal_temp = 8.0
     duration_mins = 12.0
 elif 45 <= fatigue_index <= 75:
     status = "🟡 OPTIMAL LOAD RECOVERY"
@@ -102,4 +119,4 @@ st.plotly_chart(fig, use_container_width=True)
 
 # --- EXECUTIVE FOOTER ---
 st.markdown("---")
-st.info(f"💡 **ARC Automated Recommendation:** For {athlete_name}, based on an ACWR of {acwr_score:.2f} and a Stride Knee Flexion of {knee_flexion}°, execute an immediate ice-bath immersion at exactly {optimal_temp}°C for {duration_mins} minutes to prevent post-match joint stiffness and maximize neuromuscular recovery velocity.")
+st.info(f"💡 **ARC Automated Recommendation:** For **{athlete_name}** ({role}), based on an ACWR of {acwr_score:.2f} and a Stride Knee Flexion of {knee_flexion}°, execute an immediate ice-bath immersion at exactly {optimal_temp}°C for {duration_mins} minutes to prevent post-match joint stiffness and maximize neuromuscular recovery velocity.")
