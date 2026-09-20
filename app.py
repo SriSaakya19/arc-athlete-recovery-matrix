@@ -2,75 +2,71 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-import plotly.express as px
 
-# --- THEME CONFIGURATION: Obsidian Glassmorphism Dark ---
+# --- THEME CONFIGURATION ---
 st.set_page_config(
     page_title="ARC - Predictive Recovery Matrix",
     page_icon="❄️",
     layout="wide"
 )
 
-# ULTRA-AESTHETIC DARK CSS INJECTION WITH LUCIDA CALLIGRAPHY / ITALIC AESTHETICS
+# FIXED AESTHETIC DARK CSS INJECTION
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,500;1,300&display=swap');
 
-    /* Global Dark Background */
+    /* Global Dark Background & White Text */
     .stApp {
         background-color: #050B14 !important;
-        color: #E2E8F0;
+        color: #FFFFFF !important;
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    /* Aesthetic Calligraphy Header */
+    /* Fix Header Title Cut-off */
     .aesthetic-title {
         font-family: 'Lucida Calligraphy', 'Playfair Display', cursive, serif !important;
         font-style: italic !important;
         background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 50%, #00EA97 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 3.2rem !important;
+        font-size: 2.8rem !important;
         font-weight: 700;
-        text-shadow: 0px 0px 25px rgba(0, 242, 254, 0.3);
-        margin-bottom: 0px;
+        line-height: 1.3 !important;
+        padding-bottom: 10px;
     }
 
     .aesthetic-subtitle {
         font-family: 'Lucida Calligraphy', cursive, serif !important;
         font-style: italic !important;
-        color: #94A3B8 !important;
-        font-size: 1.2rem !important;
-        letter-spacing: 1px;
+        color: #CBD5E1 !important;
+        font-size: 1.1rem !important;
     }
 
-    /* Glassmorphism Cards */
-    div[data-testid="stMetric"] {
-        background: rgba(15, 23, 42, 0.75) !important;
-        border: 1px solid rgba(100, 255, 218, 0.2) !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
-        backdrop-filter: blur(12px) !important;
-        border-radius: 16px !important;
-        padding: 18px !important;
-        transition: transform 0.3s ease;
+    /* FIX SIDEBAR TEXT VISIBILITY (WHITE TEXT) */
+    section[data-testid="stSidebar"] {
+        background-color: #0B132B !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
-    div[data-testid="stMetric"]:hover {
-        transform: translateY(-5px);
-        border: 1px solid rgba(100, 255, 218, 0.5) !important;
+
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span {
+        color: #FFFFFF !important;
+        font-weight: 500 !important;
+    }
+
+    /* Glassmorphism Metric Cards */
+    div[data-testid="stMetric"] {
+        background: rgba(15, 23, 42, 0.85) !important;
+        border: 1px solid rgba(0, 242, 254, 0.3) !important;
+        border-radius: 14px !important;
+        padding: 15px !important;
     }
 
     div[data-testid="stMetricValue"] {
         color: #00F2FE !important;
-        font-size: 32px !important;
+        font-size: 28px !important;
         font-weight: 700 !important;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    /* Sidebar Aesthetics */
-    section[data-testid="stSidebar"] {
-        background-color: #020610 !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     /* Section Headings */
@@ -78,10 +74,11 @@ st.markdown("""
         font-family: 'Lucida Calligraphy', cursive, serif !important;
         font-style: italic !important;
         color: #64FFDA !important;
-        font-size: 1.8rem !important;
+        font-size: 1.6rem !important;
         border-bottom: 1px dashed rgba(100, 255, 218, 0.2);
         padding-bottom: 8px;
         margin-top: 25px;
+        margin-bottom: 15px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -110,7 +107,7 @@ athlete_db = {
 }
 
 # --- SIDEBAR INTERFACE ---
-st.sidebar.markdown('<div style="font-family:\'Lucida Calligraphy\', cursive; font-style:italic; font-size:1.4rem; color:#00F2FE;">Athlete Telemetry Input</div>', unsafe_allow_html=True)
+st.sidebar.markdown('<div style="font-family:\'Lucida Calligraphy\', cursive; font-style:italic; font-size:1.3rem; color:#00F2FE;">Athlete Telemetry Input</div>', unsafe_allow_html=True)
 athlete_name = st.sidebar.selectbox("Target Athlete", list(athlete_db.keys()))
 
 selected_athlete = athlete_db[athlete_name]
@@ -123,7 +120,7 @@ recent_overs = st.sidebar.slider("Recent Workload (Last 7 Days Overs)", 0.0, 50.
 chronic_overs = st.sidebar.slider("Chronic Workload (Avg Weekly Overs)", 5.0, 40.0, float(selected_athlete["default_chronic"]), step=0.5)
 knee_flexion = st.sidebar.slider("Stride Knee Flexion Angle (°)", 120.0, 180.0, float(selected_athlete["default_flexion"]), step=0.5)
 
-# --- CORE MATHEMATICAL ENGINE ---
+# --- CORE ENGINE LOGIC ---
 acwr_score = recent_overs / chronic_overs if chronic_overs > 0 else 1.0
 fatigue_index = (acwr_score * 50) + ((180 - knee_flexion) * 1.5)
 
@@ -140,79 +137,79 @@ else:
     optimal_temp = 13.0
     duration_mins = 7.0
 
-# --- METRIC CARDS ---
+# --- METRICS DISPLAY ---
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric("Target Athlete", f"{athlete_name}", f"#{jersey_number}")
 with col2:
-    st.metric("ACWR Fatigue Ratio", f"{acwr_score:.2f}")
+    st.metric("ACWR Ratio", f"{acwr_score:.2f}")
 with col3:
     st.metric("Cryo Target Temp", f"{optimal_temp}°C")
 with col4:
     st.metric("Immersion Duration", f"{duration_mins} Mins")
 
-st.markdown(f"<br><div style='font-family:\"Lucida Calligraphy\", cursive; font-style:italic; font-size:1.3rem; color:#E2E8F0;'>Recovery Status: <span style='color:#00F2FE;'>{status}</span></div>", unsafe_allow_html=True)
+st.markdown(f"<br><div style='font-family:\"Lucida Calligraphy\", cursive; font-style:italic; font-size:1.3rem; color:#FFFFFF;'>Recovery Status: <span style='color:#00F2FE;'>{status}</span></div>", unsafe_allow_html=True)
 
-# --- VISUAL GRAPHICAL REPRESENTATION ---
-st.markdown('<div class="section-header">Visual Analytics & Recovery Maps ✨</div>', unsafe_allow_html=True)
+# --- STACKED GRAPHICAL LAYOUT (ONE BELOW THE OTHER) ---
+st.markdown('<div class="section-header">Biomechanical Fatigue & Workload Analytics ✨</div>', unsafe_allow_html=True)
 
-g_col1, g_col2 = st.columns(2)
+# 1. RADAR FOOTPRINT GRAPH (FULL WIDTH)
+categories = ['ACWR Fatigue', 'Knee Strain', 'Lactic Stress', 'Neural Depletion']
+values = [acwr_score * 40, (180 - knee_flexion) * 2, fatigue_index * 0.8, (recent_overs / 50) * 100]
 
-with g_col1:
-    # 1. RADAR FOOTPRINT GRAPH
-    categories = ['ACWR Fatigue', 'Knee Strain', 'Lactic Stress', 'Neural Depletion']
-    values = [acwr_score * 40, (180 - knee_flexion) * 2, fatigue_index * 0.8, (recent_overs / 50) * 100]
+fig_radar = go.Figure()
+fig_radar.add_trace(go.Scatterpolar(
+    r=values,
+    theta=categories,
+    fill='toself',
+    name='Fatigue Matrix',
+    line=dict(color='#00F2FE', width=2),
+    fillcolor='rgba(0, 242, 254, 0.25)'
+))
 
-    fig_radar = go.Figure()
-    fig_radar.add_trace(go.Scatterpolar(
-        r=values,
-        theta=categories,
-        fill='toself',
-        name='Fatigue Matrix',
-        line=dict(color='#00F2FE', width=2),
-        fillcolor='rgba(0, 242, 254, 0.25)'
-    ))
+fig_radar.update_layout(
+    title=dict(text="<em>Biomechanics Fatigue Radar Footprint</em>", font=dict(family="Lucida Calligraphy", size=18, color="#64FFDA")),
+    polar=dict(
+        radialaxis=dict(visible=True, range=[0, 100], gridcolor="rgba(255,255,255,0.15)", tickfont=dict(color="#FFFFFF")),
+        angularaxis=dict(gridcolor="rgba(255,255,255,0.15)", tickfont=dict(color="#FFFFFF", size=13)),
+        bgcolor="#050B14"
+    ),
+    paper_bgcolor="#050B14",
+    plot_bgcolor="#050B14",
+    showlegend=False,
+    height=450,
+    margin=dict(l=40, r=40, t=50, b=40)
+)
+st.plotly_chart(fig_radar, use_container_width=True)
 
-    fig_radar.update_layout(
-        title=dict(text="<em>Biomechanics Fatigue Footprint</em>", font=dict(family="Lucida Calligraphy", size=18, color="#64FFDA")),
-        polar=dict(
-            radialaxis=dict(visible=True, range=[0, 100], gridcolor="rgba(255,255,255,0.1)", showticklabels=False),
-            angularaxis=dict(gridcolor="rgba(255,255,255,0.1)", tickfont=dict(color="#E2E8F0")),
-            bgcolor="#050B14"
-        ),
-        paper_bgcolor="#050B14",
-        plot_bgcolor="#050B14",
-        showlegend=False,
-        margin=dict(l=40, r=40, t=50, b=40)
-    )
-    st.plotly_chart(fig_radar, use_container_width=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
-with g_col2:
-    # 2. WORKLOAD VS CRYO DURATION GRAPH
-    days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Match Day', 'Post Match']
-    workload_trend = [recent_overs*0.2, recent_overs*0.4, recent_overs*0.1, recent_overs*0.6, recent_overs*0.3, recent_overs, 0]
-    recovery_curve = [100 - (w * 2) for w in workload_trend]
+# 2. WORKLOAD TREND LINE GRAPH (FULL WIDTH BELOW)
+days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Match Day', 'Post Match']
+workload_trend = [recent_overs*0.2, recent_overs*0.4, recent_overs*0.1, recent_overs*0.6, recent_overs*0.3, recent_overs, 0]
+recovery_curve = [100 - (w * 1.8) for w in workload_trend]
 
-    fig_line = go.Figure()
-    fig_line.add_trace(go.Scatter(x=days, y=workload_trend, mode='lines+markers', name='Workload Trend', line=dict(color='#FF007F', width=3)))
-    fig_line.add_trace(go.Scatter(x=days, y=recovery_curve, mode='lines+markers', name='Neuromuscular Baseline %', line=dict(color='#00EA97', width=3, dash='dot')))
+fig_line = go.Figure()
+fig_line.add_trace(go.Scatter(x=days, y=workload_trend, mode='lines+markers', name='Workload Trend (Overs)', line=dict(color='#FF007F', width=3)))
+fig_line.add_trace(go.Scatter(x=days, y=recovery_curve, mode='lines+markers', name='Neuromuscular Baseline %', line=dict(color='#00EA97', width=3, dash='dot')))
 
-    fig_line.update_layout(
-        title=dict(text="<em>7-Day Workload vs Recovery Velocity</em>", font=dict(family="Lucida Calligraphy", size=18, color="#64FFDA")),
-        paper_bgcolor="#050B14",
-        plot_bgcolor="#050B14",
-        xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(color="#E2E8F0")),
-        yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(color="#E2E8F0")),
-        legend=dict(font=dict(color="#E2E8F0")),
-        margin=dict(l=40, r=40, t=50, b=40)
-    )
-    st.plotly_chart(fig_line, use_container_width=True)
+fig_line.update_layout(
+    title=dict(text="<em>7-Day Workload vs Neuromuscular Recovery Velocity</em>", font=dict(family="Lucida Calligraphy", size=18, color="#64FFDA")),
+    paper_bgcolor="#050B14",
+    plot_bgcolor="#050B14",
+    xaxis=dict(gridcolor="rgba(255,255,255,0.1)", tickfont=dict(color="#FFFFFF")),
+    yaxis=dict(gridcolor="rgba(255,255,255,0.1)", tickfont=dict(color="#FFFFFF")),
+    legend=dict(font=dict(color="#FFFFFF")),
+    height=400,
+    margin=dict(l=40, r=40, t=50, b=40)
+)
+st.plotly_chart(fig_line, use_container_width=True)
 
 # --- EXECUTIVE FOOTER ---
 st.markdown("---")
 st.markdown(f"""
-<div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #00F2FE; border-radius: 12px; padding: 20px;">
+<div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #00F2FE; border-radius: 12px; padding: 20px;">
     <h4 style="font-family:'Lucida Calligraphy', cursive; font-style:italic; color:#00F2FE; margin-top:0;">Automated Sports Science Protocol</h4>
-    <p style="color:#E2E8F0; font-size:1.05rem;">For <b>{athlete_name}</b> ({role}), based on calculated ACWR ratio of <b>{acwr_score:.2f}</b> and Knee Flexion Stride Angle of <b>{knee_flexion}°</b>, execute an immediate ice-bath immersion at <b>{optimal_temp}°C</b> for <b>{duration_mins} minutes</b> to flush lactic accumulation & prevent joint micro-strain.</p>
+    <p style="color:#FFFFFF; font-size:1.05rem;">For <b>{athlete_name}</b> ({role}), based on calculated ACWR ratio of <b>{acwr_score:.2f}</b> and Knee Flexion Stride Angle of <b>{knee_flexion}°</b>, execute an immediate ice-bath immersion at <b>{optimal_temp}°C</b> for <b>{duration_mins} minutes</b> to flush lactic accumulation & prevent joint micro-strain.</p>
 </div>
 """, unsafe_allow_html=True)
